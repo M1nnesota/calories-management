@@ -1,0 +1,28 @@
+.form {
+    display: flex;
+    justify-content: center;
+}
+.info {
+    text-align: right;
+    padding-right: 10px;
+    font-weight: bold;
+}
+td {
+    padding-top: 10px;
+}
+input {
+    border-radius: 5%;
+    height: 30px;
+    width: 400px;
+}
+.button {
+    width: 75px;
+    padding: 0;
+    margin: 0;
+    border-radius: 5%;
+    background-color: royalblue;
+    color: white;
+}
+.head {
+    font-size: 30px;
+}
