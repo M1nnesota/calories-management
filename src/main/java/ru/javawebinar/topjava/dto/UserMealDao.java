@@ -1,26 +1,29 @@
 package ru.javawebinar.topjava.dto;
 
-import ru.javawebinar.topjava.business.DataStorage;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.model.UserMealWithExceed;
+import ru.javawebinar.topjava.util.UserMealsUtil;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Created by Игорь on 04.06.2016.
  */
 public class UserMealDao implements MealService {
-    private DataStorage dataStorage = new DataStorage();
+    private Map<Integer, UserMeal> userMeal = new ConcurrentHashMap<>();
 
     @Override
     public void addUserMeal(UserMeal meal) {
-        dataStorage.userMeal.put(meal.getId(), meal);
+        userMeal.put(meal.getId(), meal);
     }
 
     @Override
     public UserMeal getUserMeal(int id) {
-        for (Map.Entry<Integer, UserMeal> user : dataStorage.userMeal.entrySet()) {
+        for (Map.Entry<Integer, UserMeal> user : userMeal.entrySet()) {
             if (id == user.getKey()) return user.getValue();
         }
         return null;
@@ -28,18 +31,19 @@ public class UserMealDao implements MealService {
 
     @Override
     public void updateUserMeal(int id, UserMeal meal) {
-        dataStorage.userMeal.entrySet().stream().filter(user -> id == user.getKey()).forEach(user -> {
-            dataStorage.userMeal.put(id, meal);
+        userMeal.entrySet().stream().filter(user -> id == user.getKey()).forEach(user -> {
+            userMeal.put(id, meal);
         });
     }
 
     @Override
     public void deleteUserMeal(int id) {
-        dataStorage.userMeal.entrySet().stream().filter(user -> id == user.getKey()).forEach(user -> dataStorage.userMeal.remove(user.getKey()));
+        userMeal.remove(id);
     }
 
     @Override
-    public List<UserMeal> getAllUserMeals() {
-        return (List<UserMeal>) dataStorage.userMeal.values();
+    public List<UserMealWithExceed> getAllUserMeals() {
+        List <UserMeal> meals = userMeal.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
+        return UserMealsUtil.getFilteredMealsWithExceeded(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
     }
 }

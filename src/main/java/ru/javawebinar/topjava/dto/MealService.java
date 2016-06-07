@@ -13,5 +13,5 @@ public interface MealService {
     UserMeal getUserMeal(int id);
     void updateUserMeal(int id, UserMeal meal);
     void deleteUserMeal(int id);
-    List<UserMeal> getAllUserMeals();
+    List<UserMealWithExceed> getAllUserMeals();
 }
