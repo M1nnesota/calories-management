@@ -22,7 +22,7 @@
         <tbody>
             <c:forEach var="meal" items="${meals}">
                 <c:choose>
-                    <c:when test="${meal.isExceed() == false}">
+                    <c:when test="${meal.exceed == false}">
                         <tr>
                             <td class="greenstyle"><c:out value="${fn:replace(meal.dateTime, 'T', ' ')}"/></td>
                             <td class="greenstyle"><c:out value="${meal.description}"/></td>

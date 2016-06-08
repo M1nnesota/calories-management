@@ -15,7 +15,6 @@
                     <td class="head" colspan="2">Редактировать еду</td>
                 </tr>
             </thead>
-            </thead>
             <tbody>
                 <tr>
                     <td class="info">Date</td>

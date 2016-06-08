@@ -28,7 +28,7 @@ public class MealServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(UserServlet.class);
     private static String INSERT_OR_EDIT = "/meal.jsp";
     private static String LIST_MEAL = "/mealList.jsp";
-    UserMealDao dao;
+    private UserMealDao dao;
 
     public MealServlet() {
         dao = new UserMealDao();

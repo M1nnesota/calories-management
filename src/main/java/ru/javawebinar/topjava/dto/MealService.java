@@ -5,10 +5,7 @@ import ru.javawebinar.topjava.model.UserMealWithExceed;
 
 import java.util.List;
 
-/**
- * Created by Игорь on 04.06.2016.
- */
-public interface MealService {
+interface MealService {
     void addUserMeal(UserMeal meal);
     UserMeal getUserMeal(int id);
     void updateUserMeal(int id, UserMeal meal);

@@ -10,9 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-/**
- * Created by Игорь on 04.06.2016.
- */
 public class UserMealDao implements MealService {
     private Map<Integer, UserMeal> userMeal = new ConcurrentHashMap<>();
 
