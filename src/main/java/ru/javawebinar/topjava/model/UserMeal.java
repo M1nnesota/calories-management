@@ -1,5 +1,9 @@
 package ru.javawebinar.topjava.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.javawebinar.topjava.LoggedUser;
+
 import java.time.LocalDateTime;
 
 /**
@@ -7,11 +11,14 @@ import java.time.LocalDateTime;
  * 11.01.2015.
  */
 public class UserMeal extends BaseEntity {
+
     private final LocalDateTime dateTime;
 
     private final String description;
 
     private final int calories;
+
+    private int userId;
 
     public UserMeal(LocalDateTime dateTime, String description, int calories) {
         this(null, dateTime, description, calories);
@@ -22,6 +29,7 @@ public class UserMeal extends BaseEntity {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+        this.userId = LoggedUser.getId();
     }
 
     public LocalDateTime getDateTime() {
@@ -34,6 +42,14 @@ public class UserMeal extends BaseEntity {
 
     public int getCalories() {
         return calories;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @Override

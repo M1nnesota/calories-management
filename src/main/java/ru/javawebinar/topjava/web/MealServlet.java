@@ -47,7 +47,7 @@ public class MealServlet extends HttpServlet {
                 request.getParameter("description"),
                 Integer.valueOf(request.getParameter("calories")));
         LOG.info(userMeal.isNew() ? "Create {}" : "Update {}", userMeal);
-        controller.create(userMeal, LoggedUser.id());
+        controller.create(userMeal, LoggedUser.getId());
         response.sendRedirect("meals");
     }
 
@@ -55,7 +55,7 @@ public class MealServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if (action == null) {
-            LOG.info("getAll");
+            LOG.info("getAll with userId = " + LoggedUser.getId());
             if (request.getParameter("startTime") != null && request.getParameter("endTime") != null) {
                 LocalTime startTime = LocalTime.parse(request.getParameter("startTime"));
                 LocalTime endTime = LocalTime.parse(request.getParameter("endTime"));
@@ -63,20 +63,20 @@ public class MealServlet extends HttpServlet {
                 LocalDate endDate = LocalDate.parse(request.getParameter("endDate"));
                 LOG.info("filtering");
                 request.setAttribute("mealList",
-                        UserMealsUtil.getFilteredWithExceeded(controller.getAll(), startTime, endTime, startDate, endDate, UserMealsUtil.DEFAULT_CALORIES_PER_DAY));
+                        UserMealsUtil.getFilteredWithExceeded(controller.getAll(LoggedUser.getId()), startTime, endTime, startDate, endDate, UserMealsUtil.DEFAULT_CALORIES_PER_DAY));
             }
             else request.setAttribute("mealList",
-                    UserMealsUtil.getWithExceeded(controller.getAll(), UserMealsUtil.DEFAULT_CALORIES_PER_DAY));
+                    UserMealsUtil.getWithExceeded(controller.getAll(LoggedUser.getId()), UserMealsUtil.DEFAULT_CALORIES_PER_DAY));
             request.getRequestDispatcher("/mealList.jsp").forward(request, response);
         } else if (action.equals("delete")) {
             int id = getId(request);
             LOG.info("Delete {}", id);
-            controller.delete(id, LoggedUser.id());
+            controller.delete(id, LoggedUser.getId());
             response.sendRedirect("meals");
         } else if (action.equals("create") || action.equals("update")) {
             final UserMeal meal = action.equals("create") ?
                     new UserMeal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
-                    controller.get(getId(request), LoggedUser.id());
+                    controller.get(getId(request), LoggedUser.getId());
             request.setAttribute("meal", meal);
             request.getRequestDispatcher("mealEdit.jsp").forward(request, response);
         }

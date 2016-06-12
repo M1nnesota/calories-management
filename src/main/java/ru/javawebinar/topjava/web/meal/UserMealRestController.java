@@ -22,28 +22,28 @@ public class UserMealRestController {
 
     public UserMeal create(UserMeal userMeal, int userId) {
 //        userMeal.setId(null);
-        LOG.info("create " + userMeal);
+        LOG.info("create " + userMeal + " with userId = " + userId);
         return service.save(userMeal, userId);
     }
 
     public void delete(int id, int userId) {
-        LOG.info("delete " + id);
+        LOG.info("delete " + id + " with userId = " + userId);
         service.delete(id, userId);
     }
 
     public UserMeal get(int id, int userId) {
-        LOG.info("get " + id);
+        LOG.info("get " + id + " with userId = " + userId);
         return service.get(id, userId);
     }
 
-    public Collection<UserMeal> getAll() {
-        LOG.info("getAll");
-        return service.getAll();
+    public Collection<UserMeal> getAll(int userId) {
+        LOG.info("getAll with userId = " + userId);
+        return service.getAll(userId);
     }
 
     public void update(UserMeal userMeal, int id, int userId) {
         userMeal.setId(id);
-        LOG.info("update " + userMeal);
+        LOG.info("update " + userMeal + " with userId = " + userId);
         service.update(userMeal, userId);
     }
 }
