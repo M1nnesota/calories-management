@@ -28,14 +28,14 @@ public class UserServlet extends HttpServlet {
         response.getWriter().write("User id is " + request.getParameter("userId"));
         response.sendRedirect("userList.jsp");
     }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getParameter("userId") != null ) {
-            LOG.info("user id is " + request.getParameter("userId"));
-            LoggedUser.setId(Integer.parseInt(request.getParameter("userId")));
-        }
-        response.getWriter().write("User id is " + request.getParameter("userId"));
-        response.sendRedirect("userList.jsp");
-    }
+//
+//    @Override
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        if (request.getParameter("userId") != null ) {
+//            LOG.info("user id is " + request.getParameter("userId"));
+//            LoggedUser.setId(Integer.parseInt(request.getParameter("userId")));
+//        }
+//        response.getWriter().write("User id is " + request.getParameter("userId"));
+//        response.sendRedirect("userList.jsp");
+//    }
 }

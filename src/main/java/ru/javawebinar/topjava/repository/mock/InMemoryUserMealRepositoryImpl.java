@@ -26,11 +26,11 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
     private Map<Integer, UserMeal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
-    {
-        UserMealsUtil.MEAL_LIST.forEach((UserMeal userMeal) -> {
-            save(userMeal, LoggedUser.getId());
-        });
-    }
+//    {
+//        UserMealsUtil.MEAL_LIST.forEach((UserMeal userMeal) -> {
+//            save(userMeal, LoggedUser.getId());
+//        });
+//    }
 
     @Override
     public UserMeal save(UserMeal userMeal, int userId) {
@@ -38,32 +38,42 @@ public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
         if (userMeal.isNew()) {
             userMeal.setId(counter.incrementAndGet());
         }
-        LOG.info("User id is " + userMeal.getUserId());
-        if (userId == userMeal.getUserId()) {
-            repository.put(userMeal.getId(), userMeal);
-        }
-        else throw new NotFoundException("Meal for this user is not found");
+        LOG.info("Save method: User id is " + userMeal.getUserId());
+        repository.put(userMeal.getId(), userMeal);
+//        else throw new NotFoundException("Meal for this user is not found");
         return userMeal;
     }
 
     @Override
     public boolean delete(int id, int userId) {
+        //// TODO: 12.06.2016 - needs logic on userId
+        LOG.info("Meal id = " + id + ", user id = " + userId);
         if (repository.get(id).getUserId() != userId) throw new NotFoundException("Meal for this user is not found");
         return repository.remove(id, repository.get(id));
     }
 
     @Override
     public UserMeal get(int id, int userId) {
+        //// TODO: 12.06.2016 - needs logic on userId
+        LOG.info("Meal id = " + id + ", user id = " + userId);
         if (repository.get(id).getUserId() != userId) throw new NotFoundException("Meal for this user is not found");
         return repository.get(id);
     }
 
     @Override
     public Collection<UserMeal> getAll(int userId) {
+//        updateAll(repository.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList()), userId);
+//        updateAll(UserMealsUtil.MEAL_LIST, userId);
         List<UserMeal> meals = repository.entrySet().stream().filter(pair -> pair.getValue().getUserId() == userId).map(Map.Entry::getValue).collect(Collectors.toList());
-        if (meals.size() == 0) throw new NotFoundException("Meal for this user is not found");
+//        if (meals.size() == 0) throw new NotFoundException("Meal for this user is not found");
         Collections.sort(meals, ((o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime())));
         return meals;
     }
+
+//    private void updateAll(List<UserMeal> meals, int userId) {
+//        for (UserMeal meal : meals) {
+//            save(meal, userId);
+//        }
+//    }
 }
 

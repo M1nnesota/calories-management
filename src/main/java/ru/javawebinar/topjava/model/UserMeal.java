@@ -21,15 +21,15 @@ public class UserMeal extends BaseEntity {
     private int userId;
 
     public UserMeal(LocalDateTime dateTime, String description, int calories) {
-        this(null, dateTime, description, calories);
+        this(null, dateTime, description, calories, 0);
     }
 
-    public UserMeal(Integer id, LocalDateTime dateTime, String description, int calories) {
+    public UserMeal(Integer id, LocalDateTime dateTime, String description, int calories, int userId) {
         super(id);
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.userId = LoggedUser.getId();
+        this.userId = userId;
     }
 
     public LocalDateTime getDateTime() {

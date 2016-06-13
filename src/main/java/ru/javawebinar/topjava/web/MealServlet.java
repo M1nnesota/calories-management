@@ -42,18 +42,26 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
+        String userId = request.getParameter("userId");
+        if (request.getParameter("userId") == null) LOG.info("Param for userId is not found");
+        else LOG.info("User id = " + request.getParameter("userId"));
         UserMeal userMeal = new UserMeal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
-                Integer.valueOf(request.getParameter("calories")));
+                Integer.valueOf(request.getParameter("calories")),
+                Integer.valueOf(userId)
+        );
         LOG.info(userMeal.isNew() ? "Create {}" : "Update {}", userMeal);
-        controller.create(userMeal, LoggedUser.getId());
+        controller.create(userMeal, Integer.valueOf(userId));
         response.sendRedirect("meals");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (request.getParameter("userId") != null ) {
+            LOG.info("user id is " + request.getParameter("userId"));
+            LoggedUser.setId(Integer.parseInt(request.getParameter("userId")));
+        }
         String action = request.getParameter("action");
-
         if (action == null) {
             LOG.info("getAll with userId = " + LoggedUser.getId());
             if (request.getParameter("startTime") != null && request.getParameter("endTime") != null) {
@@ -70,13 +78,14 @@ public class MealServlet extends HttpServlet {
             request.getRequestDispatcher("/mealList.jsp").forward(request, response);
         } else if (action.equals("delete")) {
             int id = getId(request);
+            int userId = getUserId(request);
             LOG.info("Delete {}", id);
-            controller.delete(id, LoggedUser.getId());
+            controller.delete(id, userId);
             response.sendRedirect("meals");
         } else if (action.equals("create") || action.equals("update")) {
             final UserMeal meal = action.equals("create") ?
                     new UserMeal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
-                    controller.get(getId(request), LoggedUser.getId());
+                    controller.get(getId(request), getUserId(request));
             request.setAttribute("meal", meal);
             request.getRequestDispatcher("mealEdit.jsp").forward(request, response);
         }
@@ -84,6 +93,11 @@ public class MealServlet extends HttpServlet {
 
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
+        return Integer.valueOf(paramId);
+    }
+
+    private int getUserId(HttpServletRequest request) {
+        String paramId = Objects.requireNonNull(request.getParameter("userId"));
         return Integer.valueOf(paramId);
     }
 }
