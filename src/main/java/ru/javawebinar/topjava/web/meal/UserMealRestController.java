@@ -4,9 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import ru.javawebinar.topjava.LoggedUser;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.service.UserMealService;
+import ru.javawebinar.topjava.to.UserMealWithExceed;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 
 /**
@@ -15,35 +20,39 @@ import java.util.Collection;
  */
 @Controller
 public class UserMealRestController {
-    protected final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private UserMealService service;
 
-    public UserMeal create(UserMeal userMeal, int userId) {
-//        userMeal.setId(null);
-        LOG.info("create " + userMeal + " with userId = " + userId);
-        return service.save(userMeal, userId);
+    public Collection<UserMealWithExceed> getAll() {
+        LOG.info("getAll");
+        return service.getAll(LoggedUser.getId());
     }
 
-    public void delete(int id, int userId) {
-        LOG.info("delete " + id + " with userId = " + userId);
-        service.delete(id, userId);
+    public Collection<UserMealWithExceed> getAllFiltered(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+        LOG.info("getAllFiltered");
+        if (startTime == null) startTime = LocalTime.MIN;
+        if (endTime == null) endTime = LocalTime.MAX;
+        if (startDate == null) startDate = LocalDate.MIN;
+        if (endDate == null) endDate = LocalDate.MAX;
+        return service.getAllFiltered(LoggedUser.getId(), startDate, startTime, endDate, endTime);
     }
 
-    public UserMeal get(int id, int userId) {
-        LOG.info("get " + id + " with userId = " + userId);
-        return service.get(id, userId);
+    public UserMeal get(int id) {
+        if (service.get(id, LoggedUser.getId()) == null) throw new NotFoundException("Meal is not found");
+        LOG.info("get " + id);
+        return service.get(id, LoggedUser.getId());
     }
 
-    public Collection<UserMeal> getAll(int userId) {
-        LOG.info("getAll with userId = " + userId);
-        return service.getAll(userId);
+    public void delete(int id) {
+        if (service.get(id, LoggedUser.getId()) == null) throw new NotFoundException("Meal is not found");
+        LOG.info("delete " + id);
+        service.delete(id, LoggedUser.getId());
     }
 
-    public void update(UserMeal userMeal, int id, int userId) {
-        userMeal.setId(id);
-        LOG.info("update " + userMeal + " with userId = " + userId);
-        service.update(userMeal, userId);
+    public UserMeal save(UserMeal userMeal) {
+        LOG.info("create " + userMeal);
+        return service.save(userMeal, LoggedUser.getId());
     }
 }

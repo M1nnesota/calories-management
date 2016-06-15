@@ -1,15 +1,15 @@
 package ru.javawebinar.topjava.repository.mock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.LoggedUser;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
+import ru.javawebinar.topjava.to.UserMealWithExceed;
+import ru.javawebinar.topjava.util.TimeUtil;
 import ru.javawebinar.topjava.util.UserMealsUtil;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,59 +21,52 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class InMemoryUserMealRepositoryImpl implements UserMealRepository {
-    // for testing
-    protected final Logger LOG = LoggerFactory.getLogger(getClass());
     private Map<Integer, UserMeal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
-//    {
-//        UserMealsUtil.MEAL_LIST.forEach((UserMeal userMeal) -> {
-//            save(userMeal, LoggedUser.getId());
-//        });
-//    }
+    {
+        UserMealsUtil.MEAL_LIST.forEach((UserMeal userMeal) -> save(userMeal, LoggedUser.getId()));
+    }
 
     @Override
     public UserMeal save(UserMeal userMeal, int userId) {
-        userMeal.setUserId(LoggedUser.getId());
+        userMeal.setUserId(userId);
         if (userMeal.isNew()) {
             userMeal.setId(counter.incrementAndGet());
         }
-        LOG.info("Save method: User id is " + userMeal.getUserId());
         repository.put(userMeal.getId(), userMeal);
-//        else throw new NotFoundException("Meal for this user is not found");
         return userMeal;
     }
 
     @Override
     public boolean delete(int id, int userId) {
-        //// TODO: 12.06.2016 - needs logic on userId
-        LOG.info("Meal id = " + id + ", user id = " + userId);
-        if (repository.get(id).getUserId() != userId) throw new NotFoundException("Meal for this user is not found");
-        return repository.remove(id, repository.get(id));
+        return !(!repository.containsKey(id) || repository.get(id).getUserId() != userId) && repository.remove(id, repository.get(id));
     }
 
     @Override
     public UserMeal get(int id, int userId) {
-        //// TODO: 12.06.2016 - needs logic on userId
-        LOG.info("Meal id = " + id + ", user id = " + userId);
-        if (repository.get(id).getUserId() != userId) throw new NotFoundException("Meal for this user is not found");
+        if (!repository.containsKey(id) || repository.get(id).getUserId() != userId) return null;
         return repository.get(id);
     }
 
     @Override
-    public Collection<UserMeal> getAll(int userId) {
-//        updateAll(repository.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList()), userId);
-//        updateAll(UserMealsUtil.MEAL_LIST, userId);
-        List<UserMeal> meals = repository.entrySet().stream().filter(pair -> pair.getValue().getUserId() == userId).map(Map.Entry::getValue).collect(Collectors.toList());
-//        if (meals.size() == 0) throw new NotFoundException("Meal for this user is not found");
-        Collections.sort(meals, ((o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime())));
-        return meals;
+    public Collection<UserMealWithExceed> getAll(int userId) {
+        List<UserMeal> meals = repository.entrySet().stream()
+                .filter(pair -> pair.getValue().getUserId() == userId).map(Map.Entry::getValue)
+                .sorted(((o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime())))
+                .collect(Collectors.toList());
+        return UserMealsUtil.getWithExceeded(meals, UserMealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
-//    private void updateAll(List<UserMeal> meals, int userId) {
-//        for (UserMeal meal : meals) {
-//            save(meal, userId);
-//        }
-//    }
+    @Override
+    public Collection<UserMealWithExceed> getAllFiltered(int userId, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+        List<UserMeal> meals = repository.entrySet().stream()
+                .filter(pair -> pair.getValue().getUserId() == userId)
+                .filter(pair -> TimeUtil.isBetween(pair.getValue().getDateTime().toLocalDate(), startDate, endDate))
+                .filter(pair -> TimeUtil.isBetween(pair.getValue().getDateTime().toLocalTime(), startTime, endTime))
+                .sorted(((o1, o2) -> o2.getValue().getDateTime().compareTo(o1.getValue().getDateTime())))
+                .map(Map.Entry::getValue).collect(Collectors.toList());
+        return UserMealsUtil.getWithExceeded(meals, UserMealsUtil.DEFAULT_CALORIES_PER_DAY);
+    }
 }
 

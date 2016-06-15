@@ -18,24 +18,13 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class UserServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(UserServlet.class);
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOG.debug("redirect to userList");
-        //only 1 user
         if (request.getParameter("userId") != null ) {
             LOG.info("user id is " + request.getParameter("userId"));
             LoggedUser.setId(Integer.parseInt(request.getParameter("userId")));
         }
-        response.getWriter().write("User id is " + request.getParameter("userId"));
         response.sendRedirect("userList.jsp");
     }
-//
-//    @Override
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        if (request.getParameter("userId") != null ) {
-//            LOG.info("user id is " + request.getParameter("userId"));
-//            LoggedUser.setId(Integer.parseInt(request.getParameter("userId")));
-//        }
-//        response.getWriter().write("User id is " + request.getParameter("userId"));
-//        response.sendRedirect("userList.jsp");
-//    }
 }

@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
+import ru.javawebinar.topjava.to.UserMealWithExceed;
 import ru.javawebinar.topjava.util.exception.ExceptionUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 
 /**
@@ -34,12 +37,12 @@ public class UserMealServiceImpl implements UserMealService {
     }
 
     @Override
-    public Collection<UserMeal> getAll(int userId) {
+    public Collection<UserMealWithExceed> getAll(int userId) {
         return repository.getAll(userId);
     }
 
     @Override
-    public void update(UserMeal userMeal, int userId) {
-        repository.save(userMeal, userId);
+    public Collection<UserMealWithExceed> getAllFiltered(int userId, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+        return repository.getAllFiltered(userId, startDate, startTime, endDate, endTime);
     }
 }

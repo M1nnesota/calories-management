@@ -7,13 +7,13 @@ import ru.javawebinar.topjava.util.UserMealsUtil;
  * 06.03.2015.
  */
 public class LoggedUser {
-    private static int id;
+    private static Integer id;
 
-    public static void setId(int id) {
+    public static void setId(Integer id) {
         LoggedUser.id = id;
     }
 
-    public static int getId() {
+    public static Integer getId() {
         return id;
     }
 

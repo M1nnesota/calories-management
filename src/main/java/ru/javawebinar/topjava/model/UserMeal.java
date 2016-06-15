@@ -1,9 +1,5 @@
 package ru.javawebinar.topjava.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.javawebinar.topjava.LoggedUser;
-
 import java.time.LocalDateTime;
 
 /**
@@ -59,6 +55,7 @@ public class UserMeal extends BaseEntity {
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
+                ", userId=" + userId +
                 '}';
     }
 }

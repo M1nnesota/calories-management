@@ -37,8 +37,15 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExceed> getWithExceeded(Collection<UserMeal> mealList, int caloriesPerDay) {
-        return getFilteredWithExceeded(mealList, LocalTime.MIN, LocalTime.MAX, LocalDate.MIN, LocalDate.MAX, caloriesPerDay);
+        Map<LocalDate, Integer> caloriesSumByDate = mealList.stream()
+                .collect(Collectors.groupingBy(um -> um.getDateTime().toLocalDate(),
+                        Collectors.summingInt(UserMeal::getCalories))
+                );
+        return mealList.stream()
+                .map(um -> createWithExceed(um, caloriesSumByDate.get(um.getDateTime().toLocalDate()) > caloriesPerDay))
+                .collect(Collectors.toList());
     }
+
     public static List<UserMealWithExceed> getFilteredWithExceeded(Collection<UserMeal> mealList, LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = mealList.stream()
                 .collect(Collectors.groupingBy(um -> um.getDateTime().toLocalDate(),
@@ -68,7 +75,6 @@ public class UserMealsUtil {
     }
 
     public static UserMealWithExceed createWithExceed(UserMeal um, boolean exceeded) {
-//        um.setUserId(LoggedUser.getId()); //test
         return new UserMealWithExceed(um.getId(), um.getDateTime(), um.getDescription(), um.getCalories(), exceeded, um.getUserId());
     }
 }

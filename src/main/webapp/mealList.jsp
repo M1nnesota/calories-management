@@ -21,7 +21,7 @@
     <h2><a href="index.html">Home</a></h2>
     <h3>Meal list</h3>
     <br>
-    <form method="get" name="datetimefiltration" id="datetimefiltration" action="meals?action=filter">
+    <form method="get" name="datetimefiltration" id="datetimefiltration" action="meals">
         <table>
             <tr>
                 <td>From date</td>
