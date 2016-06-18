@@ -1,7 +1,10 @@
 package ru.javawebinar.topjava.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.to.UserMealWithExceed;
+import ru.javawebinar.topjava.web.MealServlet;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +18,9 @@ import java.util.stream.Collectors;
  * 31.05.2015.
  */
 public class UserMealsUtil {
+    //testing
+    private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
+
     public static final List<UserMeal> MEAL_LIST = Arrays.asList(
             new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
             new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
