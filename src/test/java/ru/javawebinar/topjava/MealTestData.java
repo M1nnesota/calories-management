@@ -2,6 +2,7 @@ package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.matcher.ModelMatcher;
 import ru.javawebinar.topjava.model.UserMeal;
+import ru.javawebinar.topjava.util.UserMealsUtil;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -10,7 +11,10 @@ import java.time.Month;
  * GKislin
  * 13.03.2015.
  */
-public class MealTestData {
+public class MealTestData extends UserMeal {
+    public static final int USER_ID = START_SEQ;
+    public static final int ADMIN_ID = START_SEQ + 1;
+
     public static final UserMeal um1 = new UserMeal(1, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
     public static final UserMeal um2 = new UserMeal(2, LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
     public static final UserMeal um3 = new UserMeal(3, LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500);
@@ -22,7 +26,19 @@ public class MealTestData {
 
     public static final ModelMatcher<UserMeal, String> MATCHER = new ModelMatcher<>(UserMeal::toString);
 
-    public static class TestUserMeal extends UserMeal {
-        // TODO: 17.06.2016 logic!
+    public MealTestData(UserMeal um) {
+        this(um.getId(), um.getDateTime(), um.getDescription(), um.getCalories());
+    }
+
+    public MealTestData(LocalDateTime dateTime, String description, int calories) {
+        this(null, dateTime, description, UserMealsUtil.DEFAULT_CALORIES_PER_DAY);
+    }
+
+    public MealTestData(Integer id, LocalDateTime dateTime, String description, int calories) {
+        super(id, dateTime, description, calories);
+    }
+
+    public UserMeal asUserMeal() {
+        return new UserMeal(this);
     }
 }

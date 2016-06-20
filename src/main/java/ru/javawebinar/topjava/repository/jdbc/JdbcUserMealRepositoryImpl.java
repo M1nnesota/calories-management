@@ -46,8 +46,9 @@ public class JdbcUserMealRepositoryImpl implements UserMealRepository {
 
     @Override
     public UserMeal save(UserMeal userMeal, int userId) {
+        userMeal.setId(10);
         MapSqlParameterSource map = new MapSqlParameterSource()
-                .addValue("id", userMeal.getId())
+//                .addValue("id", userMeal.getId())
                 .addValue("dateTime", Timestamp.valueOf(userMeal.getDateTime()))
                 .addValue("description", userMeal.getDescription())
                 .addValue("calories", userMeal.getCalories())
