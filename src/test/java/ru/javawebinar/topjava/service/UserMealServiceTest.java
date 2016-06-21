@@ -98,14 +98,14 @@ public class UserMealServiceTest {
         updated.setDescription("Updated description");
         updated.setCalories(1100);
         service.update(updated, ADMIN_ID);
-        MATCHER.assertEquals(updated, service.get(um1.getId(), USER_ID));
+        MATCHER.assertEquals(updated, service.get(um1.getId(), ADMIN_ID));
     }
 
     @Test
-    public void testSave() throws Exception { // TODO: 19.06.2016 - test failed
+    public void testSave() throws Exception {
         MealTestData tum = new MealTestData(null, LocalDateTime.now(), "description", 200);
         UserMeal created = service.save(tum.asUserMeal(), USER_ID);
         tum.setId(created.getId());
-        MATCHER.assertCollectionEquals(Arrays.asList(um1, um2, um3, um4, tum, um5, um6), service.getAll(USER_ID));
+        MATCHER.assertCollectionEquals(Arrays.asList(um1, um2, um3, um4, um5, um6, tum), service.getAll(USER_ID));
     }
 }

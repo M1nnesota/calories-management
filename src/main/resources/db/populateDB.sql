@@ -1,6 +1,7 @@
 DELETE FROM user_roles;
 DELETE FROM meals;
 DELETE FROM users;
+ALTER SEQUENCE meal_seq RESTART WITH 1;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)
@@ -13,12 +14,12 @@ INSERT INTO user_roles (role, user_id) VALUES
   ('ROLE_USER', 100000),
   ('ROLE_ADMIN', 100001);
 
-INSERT INTO meals (id, dateTime, description, calories, userid) VALUES
-  (1, (TIMESTAMP '2015-05-30 10:00:00'), 'Завтрак', 500, 100000),
-  (2, (TIMESTAMP '2015-05-30 13:00:00'), 'Обед', 1000, 100000),
-  (3, (TIMESTAMP '2015-05-30 20:00:00'), 'Ужин', 500, 100000),
-  (4, (TIMESTAMP '2015-05-31 10:00:00'), 'Завтрак', 1000, 100000),
-  (5, (TIMESTAMP '2015-05-31 13:00:00'), 'Обед', 500, 100000),
-  (6, (TIMESTAMP '2015-05-31 20:00:00'), 'Ужин', 510, 100000),
-  (7, (TIMESTAMP '2015-06-01 14:00:00'), 'Админ ланч', 510, 100001),
-  (8, (TIMESTAMP '2015-06-01 21:00:00'), 'Админ ужин', 150, 100001);
+INSERT INTO meals (dateTime, description, calories, userId) VALUES
+  ((TIMESTAMP '2015-05-30 10:00:00'), 'Завтрак', 500, 100000),
+  ((TIMESTAMP '2015-05-30 13:00:00'), 'Обед', 1000, 100000),
+  ((TIMESTAMP '2015-05-30 20:00:00'), 'Ужин', 500, 100000),
+  ((TIMESTAMP '2015-05-31 10:00:00'), 'Завтрак', 1000, 100000),
+  ((TIMESTAMP '2015-05-31 13:00:00'), 'Обед', 500, 100000),
+  ((TIMESTAMP '2015-05-31 20:00:00'), 'Ужин', 510, 100000),
+  ((TIMESTAMP '2015-06-01 14:00:00'), 'Админ ланч', 510, 100001),
+  ((TIMESTAMP '2015-06-01 21:00:00'), 'Админ ужин', 150, 100001);
