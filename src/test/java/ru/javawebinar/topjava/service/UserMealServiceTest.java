@@ -34,21 +34,31 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class UserMealServiceTest {
     private static final Logger LOG = LoggerFactory.getLogger(UserMealServiceTest.class);
 
-    private long start; // TODO: 24.06.2016 - rule for time? 
-
-    @Before
-    public void start() {
-        start = System.currentTimeMillis();
-    }
-
-    @After
-    public void end() {
-        start = System.currentTimeMillis() - start;
-        LOG.info("Test completed in " + start + " milliseconds.");
-    }
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    @Rule
+    public Stopwatch stopwatch = new Stopwatch() {
+        @Override
+        protected void succeeded(long nanos, Description description) {
+            logInfo(description, "succeeded", nanos);
+        }
+
+        @Override
+        protected void failed(long nanos, Throwable e, Description description) {
+            logInfo(description, "failed", nanos);
+        }
+
+        @Override
+        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
+            logInfo(description, "skipped", nanos);
+        }
+
+        @Override
+        protected void finished(long nanos, Description description) {
+            logInfo(description, "finished", nanos);
+        }
+    };
 
     @Autowired
     protected UserMealService service;
@@ -107,5 +117,11 @@ public class UserMealServiceTest {
     public void testGetBetween() throws Exception {
         MATCHER.assertCollectionEquals(Arrays.asList(MEAL3, MEAL2, MEAL1),
                 service.getBetweenDates(LocalDate.of(2015, Month.MAY, 30), LocalDate.of(2015, Month.MAY, 30), USER_ID));
+    }
+
+    private static void logInfo(Description description, String status, long nanos) {
+        String testName = description.getMethodName();
+        LOG.info(String.format("Test %s %s, spent %d milliseconds",
+                testName, status, TimeUnit.NANOSECONDS.toMillis(nanos)));
     }
 }
