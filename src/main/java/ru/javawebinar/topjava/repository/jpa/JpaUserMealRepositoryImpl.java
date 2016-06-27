@@ -63,7 +63,9 @@ public class JpaUserMealRepositoryImpl implements UserMealRepository {
                     .setParameter("userId", userId)
                     .getSingleResult();
         }
-        catch (NoResultException e) {}
+        catch (NoResultException e) {
+            return null;
+        }
         return um;
     }
 
