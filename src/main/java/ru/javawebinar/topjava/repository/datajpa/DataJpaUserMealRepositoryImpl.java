@@ -3,9 +3,12 @@ package ru.javawebinar.topjava.repository.datajpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,14 +18,20 @@ import java.util.List;
  */
 @Repository
 public class DataJpaUserMealRepositoryImpl implements UserMealRepository {
-    private static final Sort SORT_DATE = new Sort("dateTime");
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     private ProxyUserMealRepository proxy;
 
     @Override
     public UserMeal save(UserMeal userMeal, int userId) {
-        return (userMeal.getUser().getId() == userId) ? proxy.save(userMeal) : null;
+        if (!userMeal.isNew() && get(userMeal.getId(), userId) == null) {
+            return null;
+        }
+        userMeal.setUser(em.getReference(User.class, userId));
+        return proxy.save(userMeal);
     }
 
     @Override
@@ -32,7 +41,7 @@ public class DataJpaUserMealRepositoryImpl implements UserMealRepository {
 
     @Override
     public UserMeal get(int id, int userId) {
-        return null;
+        return proxy.findOne(id, userId);
     }
 
     @Override
@@ -42,6 +51,6 @@ public class DataJpaUserMealRepositoryImpl implements UserMealRepository {
 
     @Override
     public List<UserMeal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return null;
+        return proxy.getByDateTimeBetween(startDate, endDate, userId);
     }
 }
