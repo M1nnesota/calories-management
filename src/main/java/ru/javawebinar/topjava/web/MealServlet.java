@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.util.TimeUtil;
 import ru.javawebinar.topjava.web.meal.UserMealRestController;
@@ -28,11 +30,14 @@ public class MealServlet extends HttpServlet {
 
     private ConfigurableApplicationContext springContext;
     private UserMealRestController mealController;
+    private ConfigurableEnvironment environment;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
+        environment = springContext.getEnvironment();
+        environment.setActiveProfiles(Profiles.ACTIVE_DB);
         mealController = springContext.getBean(UserMealRestController.class);
     }
 
