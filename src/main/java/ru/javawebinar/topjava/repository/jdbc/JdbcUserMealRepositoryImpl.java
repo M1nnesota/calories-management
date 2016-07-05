@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 
 @Repository
+@Profile({"jdbc","postgres"})
 public class JdbcUserMealRepositoryImpl implements UserMealRepository {
 
     private static final RowMapper<UserMeal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(UserMeal.class);
@@ -77,6 +79,7 @@ public class JdbcUserMealRepositoryImpl implements UserMealRepository {
         return DataAccessUtils.singleResult(userMeals);
     }
 
+    @Override
     public List<UserMeal> getAll(int userId) {
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=? ORDER BY date_time DESC", ROW_MAPPER, userId);
