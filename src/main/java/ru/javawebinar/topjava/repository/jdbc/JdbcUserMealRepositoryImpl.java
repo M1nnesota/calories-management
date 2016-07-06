@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -9,10 +11,14 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.repository.UserMealRepository;
+import ru.javawebinar.topjava.web.MealServlet;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +30,15 @@ import java.util.List;
 @Repository
 public class JdbcUserMealRepositoryImpl implements UserMealRepository {
 
-    private static final RowMapper<UserMeal> ROW_MAPPER = new BeanPropertyRowMapper<>();
+    private static final RowMapper<UserMeal> ROW_MAPPER = (rs, rowNum) -> {
+        UserMeal um = new UserMeal();
+        um.setId(rs.getInt("id"));
+        um.setDateTime(rs.getTimestamp("date_time").toLocalDateTime());
+        um.setDescription(rs.getString("description"));
+        um.setCalories(rs.getInt("calories"));
+        um.setUser(null); // ???
+        return um;
+    };
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
