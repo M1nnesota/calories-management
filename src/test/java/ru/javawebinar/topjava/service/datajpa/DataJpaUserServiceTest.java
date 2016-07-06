@@ -13,10 +13,10 @@ import static ru.javawebinar.topjava.UserTestData.*;
 /**
  * Created by Игорь on 03.07.2016.
  */
-@ActiveProfiles(Profiles.DATAJPA)
+@ActiveProfiles({Profiles.DATAJPA, Profiles.ACTIVE_DB})
 public class DataJpaUserServiceTest extends UserServiceTest {
     @Test
-    public void testGetWithUser() throws Exception {
+    public void testGetWithMeal() throws Exception {
         User user = service.getWithMeal(USER_ID);
         MATCHER.assertEquals(USER, user);
         MealTestData.MATCHER.assertCollectionEquals(MealTestData.USER_MEALS, user.getMeals());

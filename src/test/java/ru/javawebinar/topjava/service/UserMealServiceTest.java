@@ -89,7 +89,7 @@ public abstract class UserMealServiceTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void tetUpdate() throws Exception {
         UserMeal updated = getUpdated();
         service.update(updated, USER_ID);
         MATCHER.assertEquals(updated, service.get(MEAL1_ID, USER_ID));
