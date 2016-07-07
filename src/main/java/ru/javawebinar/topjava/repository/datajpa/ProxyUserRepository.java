@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,16 +9,11 @@ import ru.javawebinar.topjava.model.User;
 
 import java.util.List;
 
-/**
- * GKislin
- * 27.03.2015.
- */
 @Transactional(readOnly = true)
 public interface ProxyUserRepository extends JpaRepository<User, Integer> {
 
     @Transactional
     @Modifying
-//    @Query(name = User.DELETE)
     @Query("DELETE FROM User u WHERE u.id=:id")
     int delete(@Param("id") int id);
 
@@ -31,7 +25,8 @@ public interface ProxyUserRepository extends JpaRepository<User, Integer> {
     User findOne(Integer id);
 
     @Override
-    List<User> findAll(Sort sort);
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email")
+    List<User> findAll();
 
     User getByEmail(String email);
 }
