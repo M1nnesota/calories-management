@@ -5,10 +5,6 @@ import ru.javawebinar.topjava.model.UserMeal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-/**
- * GKislin
- * 06.03.2015.
- */
 public interface UserMealRepository {
     // null if updated meal do not belong to userId
     UserMeal save(UserMeal userMeal, int userId);
@@ -24,4 +20,8 @@ public interface UserMealRepository {
 
     // ORDERED dateTime
     Collection<UserMeal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId);
+
+    default UserMeal getWithUser(Integer id, Integer userId) {
+        throw new UnsupportedOperationException();
+    }
 }
