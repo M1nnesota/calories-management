@@ -12,10 +12,6 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * GKislin
- * 06.03.2015.
- */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -54,5 +50,10 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(value = "users", allEntries = true)
     @Override
     public void evictCache() {
+    }
+
+    @Override
+    public User getWithMeals(int id) {
+        return ExceptionUtil.checkNotFoundWithId(repository.getWithMeals(id), id);
     }
 }
