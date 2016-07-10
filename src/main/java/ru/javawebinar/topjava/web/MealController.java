@@ -11,11 +11,15 @@ import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.service.UserMealService;
 import ru.javawebinar.topjava.to.UserMealWithExceed;
+import ru.javawebinar.topjava.util.TimeUtil;
 import ru.javawebinar.topjava.util.UserMealsUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
+import java.util.Objects;
 
 @Controller
 public class MealController {
@@ -30,28 +34,52 @@ public class MealController {
         return "mealList";
     }
 
-    @RequestMapping(value = "/meals?action=delete&id={id}", params = "id", method = RequestMethod.GET)
-    public String deleteMeal(@RequestParam("id") String id) {
-        service.delete(Integer.parseInt(id), AuthorizedUser.id());
-        // TODO: 08.07.2016 - params aren't working 
+    @RequestMapping(value = "/meals", params = {"action=delete", "id"}, method = RequestMethod.GET)
+    public String deleteMeal(@RequestParam int id) {
+        service.delete(id, AuthorizedUser.id());
         return "mealList";
     }
 
-    @RequestMapping(value = "/meals?action=create", method = RequestMethod.GET)
+    @RequestMapping(value = "/meals", params = "action=create", method = RequestMethod.GET)
     public String createMeal(Model model) {
         UserMeal meal = new UserMeal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000);
         model.addAttribute("meal", meal);
         return "mealEdit";
     }
 
-    @RequestMapping(value = "/meals?action=update&id={id}", params = "id", method = RequestMethod.GET)
-    public String updateMeal(Model model, @RequestParam("id") String id) {
-        UserMeal meal = service.get(Integer.parseInt(id), AuthorizedUser.id());
+    @RequestMapping(value = "/meals", params = {"action=update", "id"}, method = RequestMethod.GET)
+    public String updateMeal(Model model, @RequestParam int id) {
+        UserMeal meal = service.get(id, AuthorizedUser.id());
         model.addAttribute("meal", meal);
         return "mealEdit";
     }
 
-    public String filterMeal() {
+    @RequestMapping(value = "/meals", method = RequestMethod.POST)
+    public String postMeal(Model model, HttpServletRequest request) {
+        final UserMeal userMeal = new UserMeal(
+                LocalDateTime.parse(request.getParameter("dateTime")),
+                request.getParameter("description"),
+                Integer.valueOf(request.getParameter("calories")));
+        if (request.getParameter("id").isEmpty()) {
+            userMeal.setId(null);
+            service.save(userMeal, AuthorizedUser.id());
+        } else {
+            String id = Objects.requireNonNull(request.getParameter("id")); // TODO: 10.07.2016 causes an error 
+            service.update(userMeal, Integer.valueOf(id));
+        }
+        return mealList(model);
+    }
+
+    @RequestMapping(value = "/meals", params = "action=filter", method = RequestMethod.POST)
+    public String filterMeal(HttpServletRequest request) {
+        LocalDate startDate = TimeUtil.parseLocalDate(resetParam("startDate", request));
+        LocalDate endDate = TimeUtil.parseLocalDate(resetParam("endDate", request));
+        LocalTime startTime = TimeUtil.parseLocalTime(resetParam("startTime", request));
+        LocalTime endTime = TimeUtil.parseLocalTime(resetParam("endTime", request));
+        request.setAttribute("mealList", UserMealsUtil.getFilteredWithExceeded(
+                service.getBetweenDates(
+                        startDate != null ? startDate : TimeUtil.MIN_DATE, endDate != null ? endDate : TimeUtil.MAX_DATE, AuthorizedUser.id()),
+                        startTime != null ? startTime : LocalTime.MIN, endTime != null ? endTime : LocalTime.MAX, AuthorizedUser.getCaloriesPerDay()));
         return "mealList";
     }
 
