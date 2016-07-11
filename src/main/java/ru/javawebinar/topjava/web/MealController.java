@@ -35,9 +35,9 @@ public class MealController {
     }
 
     @RequestMapping(value = "/meals", params = {"action=delete", "id"}, method = RequestMethod.GET)
-    public String deleteMeal(@RequestParam int id) {
+    public String deleteMeal(Model model, @RequestParam int id) {
         service.delete(id, AuthorizedUser.id());
-        return "mealList";
+        return mealList(model);
     }
 
     @RequestMapping(value = "/meals", params = "action=create", method = RequestMethod.GET)
@@ -64,8 +64,9 @@ public class MealController {
             userMeal.setId(null);
             service.save(userMeal, AuthorizedUser.id());
         } else {
-            String id = Objects.requireNonNull(request.getParameter("id")); // TODO: 10.07.2016 causes an error 
-            service.update(userMeal, Integer.valueOf(id));
+            String id = Objects.requireNonNull(request.getParameter("id"));
+            userMeal.setId(Integer.parseInt(id));
+            service.update(userMeal, AuthorizedUser.id());
         }
         return mealList(model);
     }
