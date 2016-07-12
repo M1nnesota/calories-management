@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 import static ru.javawebinar.topjava.UserTestData.*;
 
@@ -58,7 +56,10 @@ abstract public class AbstractUserServiceTest extends AbstractServiceTest {
     @Test
     public void testGet() throws Exception {
         User user = service.get(USER_ID);
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.ROLE_USER);
         MATCHER.assertEquals(USER, user);
+        Assert.assertEquals(user.getRoles(), roles);
     }
 
     @Test(expected = NotFoundException.class)
@@ -69,7 +70,10 @@ abstract public class AbstractUserServiceTest extends AbstractServiceTest {
     @Test
     public void testGetByEmail() throws Exception {
         User user = service.getByEmail("user@yandex.ru");
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.ROLE_USER);
         MATCHER.assertEquals(USER, user);
+        Assert.assertEquals(user.getRoles(), roles);
     }
 
     @Test
@@ -84,6 +88,9 @@ abstract public class AbstractUserServiceTest extends AbstractServiceTest {
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);
         service.update(updated.asUser());
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.ROLE_USER);
         MATCHER.assertEquals(updated, service.get(USER_ID));
+        Assert.assertEquals(updated.getRoles(), roles);
     }
 }
