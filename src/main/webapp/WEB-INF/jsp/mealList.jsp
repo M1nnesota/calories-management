@@ -3,14 +3,15 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
 
-<fmt:setBundle basename="messages.app" /> <%--Needs to be checked--%>
-
 <html>
+<head>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css">
+</head>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <h2><a href="index.jsp">Home</a></h2>
+    <h2><a href="${pageContext.request.contextPath}">Home</a></h2>
     <h3>Meal list</h3>
     <form method="post" action="meals?action=filter">
         <dl>
