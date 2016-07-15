@@ -7,10 +7,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * GKislin
- * 07.01.2015.
- */
 public class TimeUtil {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -33,5 +29,13 @@ public class TimeUtil {
 
     public static LocalTime parseLocalTime(String str) {
         return StringUtils.isEmpty(str) ? null : LocalTime.parse(str);
+    }
+
+    public static LocalDateTime parseLocalDateTime(String str) {
+        return parseLocalDateTime(str, DATE_TIME_FORMATTER);
+    }
+
+    public static LocalDateTime parseLocalDateTime(String str, DateTimeFormatter formatter) {
+        return StringUtils.isEmpty(str) ? LocalDateTime.now() : LocalDateTime.parse(str, formatter);
     }
 }
