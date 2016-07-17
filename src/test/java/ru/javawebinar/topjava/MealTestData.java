@@ -4,6 +4,7 @@ import ru.javawebinar.topjava.TestUtil.ToStringModelMatcher;
 import ru.javawebinar.topjava.matcher.ModelMatcher;
 import ru.javawebinar.topjava.model.UserMeal;
 
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,8 @@ public class MealTestData {
 
     public static final int MEAL1_ID = START_SEQ + 2;
     public static final int ADMIN_MEAL_ID = START_SEQ + 8;
+    public static final LocalDateTime START_DATE_TIME = LocalDateTime.of(2015, Month.MAY, 30, 10, 0);
+    public static final LocalDateTime END_DATE_TIME = LocalDateTime.of(2015, Month.MAY, 30, 18, 0);
 
     public static final UserMeal MEAL1 = new UserMeal(MEAL1_ID, of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
     public static final UserMeal MEAL2 = new UserMeal(MEAL1_ID + 1, of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
