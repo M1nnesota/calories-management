@@ -6,6 +6,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.UserMeal;
+import ru.javawebinar.topjava.util.UserMealsUtil;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
@@ -43,8 +44,8 @@ public class UserMealRestControllerTest extends AbstractControllerTest {
     public void testGetAll() throws Exception {
         TestUtil.print(mockMvc.perform(get(REST_URL))
                 .andExpect(status().isOk()));
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)));
-        MATCHER.assertCollectionEquals(USER_MEALS, mealService.getAll(USER_ID));
+        MATCHER_EXCEEDED.assertCollectionEquals(USER_MEAL_WITH_EXCEED, UserMealsUtil.getWithExceeded(mealService.getAll(USER_ID),
+                AuthorizedUser.getCaloriesPerDay()));
     }
 
     @Test
@@ -76,7 +77,7 @@ public class UserMealRestControllerTest extends AbstractControllerTest {
     
     @Test
     public void testGetBetween () throws Exception {
-        mockMvc.perform(post(REST_URL + START_DATE_TIME + "&" + END_DATE_TIME))
+        mockMvc.perform(post(REST_URL + "between?startDate=" + START_DATE_TIME + "&endDate=" + END_DATE_TIME))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

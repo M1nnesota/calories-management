@@ -1,7 +1,5 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,13 +7,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.to.UserMealWithExceed;
 import ru.javawebinar.topjava.util.LocalDateTimeConverter;
-import ru.javawebinar.topjava.util.TimeUtil;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.List;
 
 @RestController
@@ -54,9 +49,9 @@ public class UserMealRestController extends AbstractUserMealController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @RequestMapping(value = "/{startDateTime}&{endDateTime}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UserMealWithExceed> getBetween(@PathVariable("startDateTime") String startDateTime,
-                                               @PathVariable("endDateTime") String endDateTime) {
+    @RequestMapping(value = "/between", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<UserMealWithExceed> getBetween(@RequestParam(value = "startDate") String startDateTime,
+                                               @RequestParam(value = "endDate") String endDateTime) {
         LocalDate startDate = LocalDateTimeConverter.convert(startDateTime).toLocalDate();
         LocalTime startTime = LocalDateTimeConverter.convert(startDateTime).toLocalTime();
         LocalDate endDate = LocalDateTimeConverter.convert(endDateTime).toLocalDate();
