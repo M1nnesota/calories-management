@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.to.UserMealWithExceed;
+import ru.javawebinar.topjava.util.LocalDateTimeConverter;
 import ru.javawebinar.topjava.util.TimeUtil;
 
 import java.net.URI;
@@ -54,12 +55,12 @@ public class UserMealRestController extends AbstractUserMealController {
     }
 
     @RequestMapping(value = "/{startDateTime}&{endDateTime}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UserMealWithExceed> getBetween(@DateTimeFormat(iso = ISO.DATE_TIME) @PathVariable("startDateTime") LocalDateTime startDateTime,
-                                               @DateTimeFormat(iso = ISO.DATE_TIME) @PathVariable("endDateTime") LocalDateTime endDateTime) {
-        LocalDate startDate = startDateTime.toLocalDate();
-        LocalTime startTime = startDateTime.toLocalTime();
-        LocalDate endDate = endDateTime.toLocalDate();
-        LocalTime endTime = endDateTime.toLocalTime();
+    public List<UserMealWithExceed> getBetween(@PathVariable("startDateTime") String startDateTime,
+                                               @PathVariable("endDateTime") String endDateTime) {
+        LocalDate startDate = LocalDateTimeConverter.convert(startDateTime).toLocalDate();
+        LocalTime startTime = LocalDateTimeConverter.convert(startDateTime).toLocalTime();
+        LocalDate endDate = LocalDateTimeConverter.convert(endDateTime).toLocalDate();
+        LocalTime endTime = LocalDateTimeConverter.convert(endDateTime).toLocalTime();
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }
