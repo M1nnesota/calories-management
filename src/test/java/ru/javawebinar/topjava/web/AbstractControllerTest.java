@@ -19,10 +19,6 @@ import javax.annotation.PostConstruct;
 import static ru.javawebinar.topjava.Profiles.ACTIVE_DB;
 import static ru.javawebinar.topjava.Profiles.DB_IMPLEMENTATION;
 
-/**
- * User: gkislin
- * Date: 10.08.2014
- */
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-mvc.xml",
@@ -50,7 +46,7 @@ abstract public class AbstractControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @PostConstruct
-    void postConstruct() {
+    private void postConstruct() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
                 .addFilter(CHARACTER_ENCODING_FILTER)
