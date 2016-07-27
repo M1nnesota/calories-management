@@ -27,7 +27,7 @@ public class UserMealAjaxController extends AbstractUserMealController {
     public void createOrUpdate(
             @RequestParam("id") int id,
             @RequestParam("description") String description,
-            @RequestParam("dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
+            @RequestParam("datetime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
             @RequestParam("calories") int calories) {
         UserMeal meal = new UserMeal(id, dateTime, description, calories);
         if (id == 0) {

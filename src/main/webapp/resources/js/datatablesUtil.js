@@ -4,10 +4,6 @@ function makeEditable() {
         $('#editRow').modal();
     });
 
-    $('.delete').click(function () {
-        deleteRow($(this).attr("id"));
-    });
-
     $('#detailsForm').submit(function () {
         save();
         return false;
@@ -52,6 +48,23 @@ function save() {
             successNoty('Saved');
         }
     });
+}
+
+function updateCheckbox(id, name, email, password, enabled, roles) {
+    enabled = !enabled;
+    debugger;
+    $.ajax({
+        type: "POST",
+        url: ajaxUrl,
+        data: {
+            id : id,
+            name : name,
+            email: email,
+            password : password,
+            enabled : enabled,
+            roles: roles
+        }
+    })
 }
 
 var failedNote;

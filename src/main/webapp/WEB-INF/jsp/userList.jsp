@@ -36,12 +36,14 @@
                             <td><a href="mailto:${user.email}">${user.email}</a></td>
                             <td>${user.roles}</td>
                             <td>
-                                <input type="checkbox"
-                                       <c:if test="${user.enabled}">checked</c:if> id="${user.id}"/>
+                                <form method="post">
+                                    <input class="checkbox" type="checkbox" <c:if test="${user.enabled}">checked</c:if>
+                                           onclick="updateCheckbox(${user.id}, '${user.name}', '${user.email}', '${user.password}', ${user.enabled}, '${user.roles}')"/>
+                                </form>
                             </td>
                             <td><fmt:formatDate value="${user.registered}" pattern="dd-MMMM-yyyy"/></td>
-                            <td><a class="btn btn-xs btn-primary edit" id="${user.id}">Edit</a></td>
-                            <td><a class="btn btn-xs btn-danger delete" id="${user.id}">Delete</a></td>
+                            <td><a class="btn btn-xs btn-primary edit" onclick="">Edit</a></td>
+                            <td><a class="btn btn-xs btn-danger delete" onclick="deleteRow(${user.id})">Delete</a></td>
                         </tr>
                     </c:forEach>
                 </table>
@@ -109,7 +111,7 @@
 
     // $(document).ready(function () {
     $(function () {
-        datatableApi = $('#datatable').dataTable({
+        datatableApi = $('#datatable').DataTable({
             "bPaginate": false,
             "bInfo": false,
             "aoColumns": [
