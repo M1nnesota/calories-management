@@ -8,9 +8,6 @@ import ru.javawebinar.topjava.service.UserService;
 
 import java.util.List;
 
-/**
- * User: gkislin
- */
 public abstract class AbstractUserController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -47,5 +44,10 @@ public abstract class AbstractUserController {
     public User getByMail(String email) {
         log.info("getByEmail " + email);
         return service.getByEmail(email);
+    }
+
+    public void enable(int id, boolean enabled) {
+        log.info((enabled ? "enable " : "disable ") + id);
+        service.enable(id, enabled);
     }
 }
