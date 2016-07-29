@@ -7,15 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.service.UserMealService;
-import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.util.UserMealsUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class RootController {
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private UserMealService mealService;
@@ -26,8 +23,7 @@ public class RootController {
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public String userList(Model model) {
-        model.addAttribute("userList", userService.getAll());
+    public String userList() {
         return "userList";
     }
 
