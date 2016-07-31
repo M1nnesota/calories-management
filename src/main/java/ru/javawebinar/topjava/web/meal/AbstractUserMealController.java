@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.service.UserMealService;
+import ru.javawebinar.topjava.to.UserMealTo;
 import ru.javawebinar.topjava.to.UserMealWithExceed;
 import ru.javawebinar.topjava.util.TimeUtil;
 import ru.javawebinar.topjava.util.UserMealsUtil;
@@ -60,5 +61,11 @@ public abstract class AbstractUserMealController {
                         startDate != null ? startDate : TimeUtil.MIN_DATE, endDate != null ? endDate : TimeUtil.MAX_DATE, userId
                 ), startTime != null ? startTime : LocalTime.MIN, endTime != null ? endTime : LocalTime.MAX, AuthorizedUser.getCaloriesPerDay()
         );
+    }
+
+    public void update(UserMealTo userMealTo) {
+        int userId = AuthorizedUser.id();
+        LOG.info("update {} for User {}", userMealTo, userId);
+        service.update(userMealTo, userId);
     }
 }
