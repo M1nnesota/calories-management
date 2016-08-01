@@ -1,13 +1,23 @@
 package ru.javawebinar.topjava.to;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class UserMealTo {
     private Integer id;
+
+    @NotNull
     private LocalDateTime dateTime;
+
+    @NotEmpty
     private String description;
+
+    @Range(min = 10, max = 5000)
+    @NotNull(message = " must not be empty")
     private Integer calories;
 
     public UserMealTo() {
