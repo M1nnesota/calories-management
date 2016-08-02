@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.to.UserMealTo;
 import ru.javawebinar.topjava.to.UserMealWithExceed;
 import ru.javawebinar.topjava.util.UserMealsUtil;
@@ -21,6 +22,11 @@ public class UserMealAjaxController extends AbstractUserMealController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserMealWithExceed> getAll() {
         return super.getAll();
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserMeal get(@PathVariable("id") int id) {
+        return super.get(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

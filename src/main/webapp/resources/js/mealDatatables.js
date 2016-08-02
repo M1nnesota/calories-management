@@ -1,16 +1,25 @@
-
 var ajaxUrl = 'ajax/profile/meals/';
 var datatableApi;
 
-function updateTable() {
+/*function updateTable() {
     $.get(ajaxUrl, updateTableByData);
+}*/
+
+function updateTable() {
+    $.ajax({
+        type: "POST",
+        url: ajaxUrl + 'filter',
+        data: $('#filter').serialize(),
+        success: updateTableByData
+    });
+    return false;
 }
 
 $(function() {
-    datatableApi = $('datatable').DataTable({
+    datatableApi = $('#datatable').DataTable({
         "ajax": {
             "url" : ajaxUrl,
-            "dataSrc" : ""
+            "dataSrc": ""
         },
         "paging": false,
         "info": true,
@@ -20,8 +29,7 @@ $(function() {
                 "render": function (date, type, row) {
                     if (type == 'display') {
                         var dateObject = new Date(date);
-                        return '<span>' + dateObject.getDay() + '-' + dateObject.getMonth() + '-' + dateObject.getYear() +
-                            ' ' + dateObject.getHours() + ':' + dateObject.getMinutes() + '</span>';
+                        return '<span>' + dateObject.toISOString().substring(0, 16).replace('T', ' ') + '</span>';
                     }
                     return date;
                 }
@@ -31,9 +39,6 @@ $(function() {
             },
             {
                 "data": "calories"
-            },
-            {
-                "data": "exceed"
             },
             {
                 "orderable": false,
@@ -58,5 +63,10 @@ $(function() {
             }
         },
         "initComplete": makeEditable
-    })
+    });
+
+    $('#filter').submit(function () {
+        updateTable();
+        return false;
+    });
 });
