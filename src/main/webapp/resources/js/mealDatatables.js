@@ -1,10 +1,6 @@
 var ajaxUrl = 'ajax/profile/meals/';
 var datatableApi;
 
-/*function updateTable() {
-    $.get(ajaxUrl, updateTableByData);
-}*/
-
 function updateTable() {
     $.ajax({
         type: "POST",
@@ -26,12 +22,11 @@ $(function() {
         "columns": [
             {
                 "data": "dateTime",
-                "render": function (date, type, row) {
+                "render": function (data, type, row) {
                     if (type == 'display') {
-                        var dateObject = new Date(date);
-                        return '<span>' + dateObject.toISOString().substring(0, 16).replace('T', ' ') + '</span>';
+                        return '<span>' + data.substring(0, 16).replace('T', ' ') + '</span>';
                     }
-                    return date;
+                    return data;
                 }
             },
             {
@@ -52,8 +47,10 @@ $(function() {
             }
         ],
         "order": [
-            0,
-            "desc"
+            [
+                0,
+                "desc"
+            ]
         ],
         "createdRow": function (row, data, dataIndex) {
             if (!data.exceed) {
@@ -62,11 +59,20 @@ $(function() {
                 $(row).css("color", "red");
             }
         },
-        "initComplete": makeEditable
-    });
-
-    $('#filter').submit(function () {
-        updateTable();
-        return false;
+        "initComplete": function () {
+            $('#filter').submit(function () {
+                updateTable();
+                return false;
+            });
+            jQuery('#startDate, #endDate').datetimepicker({
+                timepicker:false,
+                format:'Y-m-d'
+            });
+            jQuery('#startTime, #endTime').datetimepicker({
+                datepicker:false,
+                format:'H:i'
+            });
+            makeEditable();
+        }
     });
 });
