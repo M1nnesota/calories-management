@@ -10,6 +10,8 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.web.ExceptionInfoHandler;
 
+import javax.validation.Valid;
+
 /**
  * GKislin
  * 06.03.2015.
