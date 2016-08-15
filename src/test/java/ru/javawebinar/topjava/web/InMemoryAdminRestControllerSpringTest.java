@@ -1,16 +1,16 @@
 package ru.javawebinar.topjava.web;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.web.user.AbstractUserController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
 import java.util.Collection;
@@ -33,6 +33,16 @@ public class InMemoryAdminRestControllerSpringTest {
         repository.getAll().forEach(u -> repository.delete(u.getId()));
         repository.save(USER);
         repository.save(ADMIN);
+    }
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", true);
+    }
+
+    @AfterClass
+    public static void afterClass() throws Exception {
+        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", false);
     }
 
     @Test
