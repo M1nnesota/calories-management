@@ -18,14 +18,4 @@ abstract public class AbstractJpaUserServiceTest extends AbstractUserServiceTest
         super.setUp();
         jpaUtil.clear2ndLevelHibernateCache();
     }
-
-    @BeforeClass
-    public static void beforeClass() {
-        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", true);
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", false);
-    }
 }

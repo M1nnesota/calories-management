@@ -35,16 +35,6 @@ public class InMemoryAdminRestControllerSpringTest {
         repository.save(ADMIN);
     }
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", true);
-    }
-
-    @AfterClass
-    public static void afterClass() throws Exception {
-        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", false);
-    }
-
     @Test
     public void testDelete() throws Exception {
         controller.delete(UserTestData.USER_ID);

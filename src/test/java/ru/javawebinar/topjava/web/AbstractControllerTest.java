@@ -63,14 +63,4 @@ abstract public class AbstractControllerTest {
     public void setUp() {
         userService.evictCache();
     }
-
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", true);
-    }
-
-    @AfterClass
-    public static void afterClass() throws Exception {
-        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", false);
-    }
 }

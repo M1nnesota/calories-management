@@ -23,15 +23,9 @@ public class InMemoryAdminRestControllerTest {
 
     @BeforeClass
     public static void beforeClass() {
-        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", true);
         appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-mvc.xml", "spring/mock.xml");
         System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
         controller = appCtx.getBean(AdminRestController.class);
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        ReflectionTestUtils.setField(AbstractUserController.class, "isTest", false);
     }
 
     @Before
