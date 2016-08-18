@@ -17,14 +17,6 @@ public abstract class AbstractUserController {
     @Autowired
     private UserService service;
 
-    private static boolean isTest;
-
-    private void checkModificationAllowed(Integer id) {
-        if (id != null && id < BaseEntity.START_SEQ + 2 && !isTest) {
-            throw new ValidationException("Admin/User modification is not allowed. <br><br><a class=\"btn btn-primary btn-lg\" role=\"button\" href=\"register\">Register &raquo;</a> your own please.");
-        }
-    }
-
     public List<User> getAll() {
         log.info("getAll");
         return service.getAll();
@@ -42,20 +34,17 @@ public abstract class AbstractUserController {
     }
 
     public void delete(int id) {
-        checkModificationAllowed(id);
         log.info("delete " + id);
         service.delete(id);
     }
 
     public void update(User user, int id) {
-        checkModificationAllowed(id);
         user.setId(id);
         log.info("update " + user);
         service.update(user);
     }
 
     public void update(UserTo userTo) {
-        checkModificationAllowed(userTo.getId());
         log.info("update " + userTo);
         service.update(userTo);
     }
